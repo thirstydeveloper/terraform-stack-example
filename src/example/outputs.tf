@@ -1,3 +1,3 @@
-output "foo" {
-  value = "bar"
+output "bucket_id" {
+  value = aws_s3_bucket.example.id
 }

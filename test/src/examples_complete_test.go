@@ -10,6 +10,9 @@ import (
 func TestExamplesComplete(t *testing.T) {
 	t.Parallel()
 
+	//	rand.Seed(time.Now().UnixNano())
+	//	randID := strconv.Itoa(rand.Intn(100000))
+
 	terraformOptions := &terraform.Options{
 		TerraformDir: "../../examples/complete",
 		Upgrade:      true,
@@ -21,7 +24,7 @@ func TestExamplesComplete(t *testing.T) {
 
 	terraform.InitAndApply(t, terraformOptions)
 
-	foo := terraform.Output(t, terraformOptions, "foo")
+	bucketId := terraform.Output(t, terraformOptions, "bucket_id")
 
-	assert.Equal(t, "bar", foo)
+	assert.Equal(t, "foo", bucketId)
 }
