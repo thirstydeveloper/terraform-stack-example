@@ -15,3 +15,10 @@ Created this by:
 1. `cd test/src && go mod init github.com/thirstydeveloper/terraform-example-module`
 1. `touch Makefile examples_complete_test.go`
 1. Add makefile and terratest code
+1. Add buildspec, .terraform-version
+1. Create Codebuild project (manually for now)
+    1. Using GitHub personal access token to authenticate
+    1. Using Ubuntu 5.0 for golang 1.15 support (as of 9/23/21)
+    1. Autocreated Codebuild service role, attached IAM policy to allow it to create/delete the s3 bucket the example module manages
+    1. Set a max of 1 concurrent build at a time, though that may be unnecessary
+    1. Builds triggered manually for now
