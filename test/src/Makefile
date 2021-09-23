@@ -1,8 +1,13 @@
 .PHONY: all
 all: test
 
+.PHONY: init
+init:
+	tfenv install
+	tfenv use
+
 .PHONY: test
-test:
+test: init
 	go mod download
 	go test -v -timeout 60m
 
