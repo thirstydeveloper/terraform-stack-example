@@ -23,5 +23,5 @@ func TestExamplesComplete(t *testing.T) {
 
 	foo := terraform.Output(t, terraformOptions, "foo")
 
-	assert.Equal(t, "baz", foo)
+	assert.Equal(t, "bar", foo)
 }
