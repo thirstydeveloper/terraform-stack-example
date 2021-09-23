@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestExamplesComplete(t *testing.T) {
@@ -19,4 +20,8 @@ func TestExamplesComplete(t *testing.T) {
 	defer terraform.Destroy(t, terraformOptions)
 
 	terraform.InitAndApply(t, terraformOptions)
+
+	foo := terraform.Output(t, terraformOptions, "foo")
+
+	assert.Equal(t, "baz", foo)
 }

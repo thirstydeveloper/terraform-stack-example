@@ -1,3 +1,3 @@
-output "example" {
-  value = module.example
+output "foo" {
+  value = module.example.foo
 }
