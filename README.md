@@ -1,3 +1,7 @@
+Based on:
+
+https://github.com/cloudposse/terraform-example-module
+
 Created this by:
 
 1. Installed go, set GOPATH to ${HOME}/go
