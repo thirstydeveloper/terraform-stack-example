@@ -1,0 +1,23 @@
+version: 0.2
+
+env:
+  variables:
+    TFENV_CURL_OUTPUT: 0
+    TFENV_DEBUG: 0
+    TFENV_VERSION: v2.2.2
+
+phases:
+  install:
+    runtime-versions:
+      golang: 1.15
+
+    commands:
+      - git config --global advice.detachedHead false
+      - git clone --quiet --branch ${TFENV_VERSION} https://github.com/tfutils/tfenv.git ~/.tfenv
+      - ln -s ~/.tfenv/bin/* /usr/local/bin
+      - tfenv install
+      - tfenv use
+
+  build:
+    commands:
+      - make --directory test/src
