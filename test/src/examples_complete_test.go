@@ -1,7 +1,10 @@
 package test
 
 import (
+	"fmt"
+	"math/rand"
 	"testing"
+	"time"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
@@ -10,21 +13,25 @@ import (
 func TestExamplesComplete(t *testing.T) {
 	t.Parallel()
 
-	//	rand.Seed(time.Now().UnixNano())
-	//	randID := strconv.Itoa(rand.Intn(100000))
+	rand.Seed(time.Now().UnixNano())
+	randID := rand.Intn(100000)
+
+	expectedBucketId := fmt.Sprintf("thirstydev-%d", randID)
 
 	terraformOptions := &terraform.Options{
 		TerraformDir: "../../examples/complete",
 		Upgrade:      true,
 		VarFiles:     []string{},
-		Vars:         map[string]interface{}{},
+		Vars: map[string]interface{}{
+			"id": expectedBucketId,
+		},
 	}
 
 	defer terraform.Destroy(t, terraformOptions)
 
 	terraform.InitAndApply(t, terraformOptions)
 
-	bucketId := terraform.Output(t, terraformOptions, "bucket_id")
+	actualBucketId := terraform.Output(t, terraformOptions, "bucket_id")
 
-	assert.Equal(t, "foo", bucketId)
+	assert.Equal(t, expectedBucketId, actualBucketId)
 }
