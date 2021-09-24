@@ -3,6 +3,7 @@ package test
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 	"testing"
 	"time"
 
@@ -14,18 +15,29 @@ func TestExamplesComplete(t *testing.T) {
 	t.Parallel()
 
 	rand.Seed(time.Now().UnixNano())
-	randID := rand.Intn(100000)
 
-	expectedBucketId := fmt.Sprintf("thirstydev-%d", randID)
+	namespace := "thirstydev"
+	environment := strconv.Itoa(rand.Intn(100000))
 
 	terraformOptions := &terraform.Options{
 		TerraformBinary: "terragrunt",
 		TerraformDir:    "../../examples/complete",
 		Upgrade:         true,
-		VarFiles:        []string{},
-		Vars: map[string]interface{}{
-			"id": expectedBucketId,
+		// These vars are used by the fixture only. We cannot pass them to
+		// vars because then our stack under test will fail complaining
+		// about -var CLI arguments for undeclared variables. We can't use
+		// VarFiles because we need dynamic values (environment) and our
+		// test needs easy access to them.
+		//
+		// See:
+		//
+		// https://www.terraform.io/docs/language/values/variables.html#values-for-undeclared-variables
+		EnvVars: map[string]string{
+			"TF_VAR_fixture_namespace":   namespace,
+			"TF_VAR_fixture_environment": environment,
 		},
+		VarFiles: []string{},
+		Vars:     map[string]interface{}{},
 	}
 
 	defer terraform.TgDestroyAll(t, terraformOptions)
@@ -34,5 +46,5 @@ func TestExamplesComplete(t *testing.T) {
 
 	actualBucketId := terraform.Output(t, terraformOptions, "bucket_id")
 
-	assert.Equal(t, expectedBucketId, actualBucketId)
+	assert.Equal(t, fmt.Sprintf("%s-%s", namespace, environment), actualBucketId)
 }
