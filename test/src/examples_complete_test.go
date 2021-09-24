@@ -21,9 +21,9 @@ func TestExamplesComplete(t *testing.T) {
 
 	terraformOptions := &terraform.Options{
 		TerraformBinary: "terragrunt",
-		// Use the verify stack as the target so we can access its outputs
-		TerraformDir: "../../examples/complete/verify",
-		Upgrade:      true,
+		TerraformDir:    "../../examples/complete/verify",
+		// Use the verify stack as the target so we can access its outputs TerraformDir: "../../examples/complete/verify",
+		Upgrade: true,
 		// These vars are used by the fixture only. We cannot pass them to
 		// vars because then our stack under test will fail complaining
 		// about -var CLI arguments for undeclared variables. We can't use
@@ -50,7 +50,9 @@ func TestExamplesComplete(t *testing.T) {
 
 	terraform.TgApplyAll(t, terraformOptions)
 
-	actualBucketId := terraform.Output(t, terraformOptions, "bucket_id")
+	var bucket map[string]interface{}
 
-	assert.Equal(t, fmt.Sprintf("%s-%s", namespace, environment), actualBucketId)
+	terraform.OutputStruct(t, terraformOptions, "bucket", &bucket)
+
+	assert.Equal(t, fmt.Sprintf("%s-%s", namespace, environment), bucket["id"])
 }
