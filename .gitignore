@@ -42,3 +42,5 @@ terraform.rc
 **/.terragrunt-cache/*
 
 # End of https://www.toptal.com/developers/gitignore/api/terraform,terragrunt
+
+.terraform.lock.hcl
