@@ -1,30 +1,43 @@
-Prerequisites:
+# terraform-example-module
 
+Example of testing a terragrunt stack (root module). Derived from https://github.com/cloudposse/terraform-example-module
+
+## Prerequisites
+
+  * Go
   * [tfenv](https://github.com/tfutils/tfenv.git )
   * [tgenv](https://github.com/taosmountain/tgenv.git)
     * NOTE: you cannot use the original, unmaintained implementation because it adds JSON incompatible lines to `terragrunt output` calls
 
-Based on:
+## Approach
 
-https://github.com/cloudposse/terraform-example-module
+Using terratest to test terragrunt root modules differs from traditional terratest testing.
 
-Created this by:
+With terratest you typically create a root module under `examples/` and instantiate the module under test there. When testing a
+terragrunt stack, the module under test is itself a root module. You could still create a new root module and instantiate the
+stack as a child module, but that has several disadvantages:
 
-1. Installed go, set GOPATH to ${HOME}/go
-1. Create new git repo, cloning
-1. Create main .gitignore using gitignore.io for terraform and terragrunt
-1. Create directory structure `mkdir -p examples/complete src/example test/src  
-1. Create basic module with just outputs.tf and a single output under src/example
-1. Create basic module under `examples/complete` that:
-    1. main.tf instantiates a module for `../../src/example`
-    1. outputs.tf passes through the output from `src/example/outputs.tf`
-1. `cd test/src && go mod init github.com/thirstydeveloper/terraform-example-module`
-1. `touch Makefile examples_complete_test.go`
-1. Add makefile and terratest code
-1. Add buildspec, .terraform-version
-1. Create Codebuild project (manually for now)
-    1. Using GitHub personal access token to authenticate
-    1. Using Ubuntu 5.0 for golang 1.15 support (as of 9/23/21)
-    1. Autocreated Codebuild service role, attached IAM policy to allow it to create/delete the s3 bucket the example module manages
-    1. Set a max of 1 concurrent build at a time, though that may be unnecessary
-    1. Builds triggered manually for now
+1. Your terragrunt stack almost certainly declares providers. Providers in child modules are not recommended and have limitations.
+2. Your example is not indicative of how someone would actually consume your terragrunt stack.
+
+Instead of creating a new root module, we should consume the stack the same way our users would: with a `terragrunt.hcl`.
+
+It isn't quite that simple though. What if your stack requires a test fixture? Normally you'd put that in the examples root module,
+but now we're not creating that.
+
+Terragrunt is helpful here too with its -all commands. We can:
+
+1. Create a separate fixture stack
+1. Have our example terragrunt.hcl depend on the fixture stack
+1. Use terratest's TgApplyAll and TgDestroyAll to create the fixture first, and our example module second
+
+This works super well!
+
+Next we have to perform assertions. How should we do that? We can use Golang libraries (e.g., AWS SDK). Another option though
+is to use Terraform itself to interragate the results using data sources. This cuts down on the amount of golang you need to
+write and may be more similar to how consuming stacks might integrate with this stack. If your team isn't strong in Golang,
+this may be a more friendly approach to learn.
+
+Since we're using TgApplyAll and TgDestroyAll, we can just add a `consumer` stack that depends on the example stack. The
+consumer stack will use data sources to query whatever is needed and expose values using outputs. Our terratest code can then
+access those outputs to run assertions.
