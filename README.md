@@ -1,4 +1,4 @@
-# terraform-example-module
+# terraform-stack-example
 
 Example of testing a terragrunt stack (root module). Derived from https://github.com/cloudposse/terraform-example-module
 

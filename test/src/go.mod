@@ -1,4 +1,4 @@
-module github.com/thirstydeveloper/terraform-example-module
+module github.com/thirstydeveloper/terraform-stack-example
 
 go 1.15
 
