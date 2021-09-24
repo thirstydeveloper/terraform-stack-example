@@ -1,3 +1,8 @@
+Prerequisites:
+
+  * [tfenv](https://github.com/tfutils/tfenv.git )
+  * [tgenv](https://github.com/taosmountain/tgenv.git)
+    * NOTE: you cannot use the original, unmaintained implementation because it adds JSON incompatible lines to `terragrunt output` calls
 Based on:
 
 https://github.com/cloudposse/terraform-example-module
