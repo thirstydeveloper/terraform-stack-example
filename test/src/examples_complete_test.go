@@ -30,7 +30,7 @@ func TestExamplesComplete(t *testing.T) {
 
 	defer terraform.Destroy(t, terraformOptions)
 
-	terraform.InitAndApply(t, terraformOptions)
+	terraform.TgApplyAll(t, terraformOptions)
 
 	actualBucketId := terraform.Output(t, terraformOptions, "bucket_id")
 
