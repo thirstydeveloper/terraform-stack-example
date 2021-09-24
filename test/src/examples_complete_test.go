@@ -19,9 +19,10 @@ func TestExamplesComplete(t *testing.T) {
 	expectedBucketId := fmt.Sprintf("thirstydev-%d", randID)
 
 	terraformOptions := &terraform.Options{
-		TerraformDir: "../../examples/complete",
-		Upgrade:      true,
-		VarFiles:     []string{},
+		TerraformBinary: "terragrunt",
+		TerraformDir:    "../../examples/complete",
+		Upgrade:         true,
+		VarFiles:        []string{},
 		Vars: map[string]interface{}{
 			"id": expectedBucketId,
 		},

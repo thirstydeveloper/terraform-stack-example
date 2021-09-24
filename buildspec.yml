@@ -5,6 +5,9 @@ env:
     TFENV_CURL_OUTPUT: 0
     TFENV_DEBUG: 0
     TFENV_VERSION: v2.2.2
+    TGENV_CURL_OUTPUT: 0
+    TGENV_DEBUG: 0
+    TGENV_VERSION: 0.1.0
 
 phases:
   install:
@@ -17,6 +20,10 @@ phases:
       - ln -s ~/.tfenv/bin/* /usr/local/bin
       - tfenv install
       - tfenv use
+      - git clone https://github.com/taosmountain/tgenv.git ~/.tgenv
+      - ln -s ~/.tgenv/bin/* /usr/local/bin
+      - tgenv install
+      - tgenv use
 
   build:
     commands:

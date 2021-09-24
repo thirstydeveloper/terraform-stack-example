@@ -1,10 +1,18 @@
 .PHONY: all
 all: test
 
-.PHONY: init
-init:
+.PHONY: init-tfenv
+init-tfenv:
 	tfenv install
 	tfenv use
+
+.PHONY: init-tgenv
+init-tgenv:
+	tgenv install latest:0
+	tgenv use latest:0
+
+.PHONY: init
+init: init-tfenv init-tgenv
 
 .PHONY: test
 test: init
