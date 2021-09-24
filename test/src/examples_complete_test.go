@@ -28,7 +28,7 @@ func TestExamplesComplete(t *testing.T) {
 		},
 	}
 
-	defer terraform.Destroy(t, terraformOptions)
+	defer terraform.TgDestroyAll(t, terraformOptions)
 
 	terraform.TgApplyAll(t, terraformOptions)
 
